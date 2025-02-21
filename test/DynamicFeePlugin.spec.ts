@@ -4,7 +4,7 @@ import { ethers } from 'hardhat';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
 import { pluginFixture } from './shared/fixtures';
-import { encodePriceSqrt, getMaxTick, getMinTick } from './shared/utilities';
+import { encodePriceSqrt } from './shared/utilities';
 
 import { IAlgebraPool, DynamicFeePlugin, DynamicFeePluginFactory } from '../typechain-types';
 
@@ -14,9 +14,6 @@ describe('DynamicFeePlugin', () => {
   let plugin: DynamicFeePlugin;
   let pluginFactory: DynamicFeePluginFactory;
   let pool: IAlgebraPool;
-
-  let minTick = getMinTick(60);
-  let maxTick = getMaxTick(60);
 
   async function initializeAtZeroTick(pool: IAlgebraPool) {
     await pool.initialize(encodePriceSqrt(1, 1));
