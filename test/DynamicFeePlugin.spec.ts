@@ -22,7 +22,7 @@ describe('DynamicFeePlugin', () => {
     ({ plugin, pool, pluginFactory } = await loadFixture(pluginFixture));
   });
 
-  describe('#BeofreSwap', async () => {
+  describe('#BeforeSwap', async () => {
     it('returns right fee for zeroToOne swap', async () => {
       const poolSigner = new ethers.VoidSigner(await pool.getAddress(), ethers.provider)
 
