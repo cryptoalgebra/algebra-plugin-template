@@ -7,8 +7,6 @@ import {
     DynamicFeePlugin,
     IAlgebraPool, IAlgebraFactory
 } from '../../typechain-types';
-import AlgebraFactoryJson
-    from "@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactory.sol/AlgebraFactory.json";
 
 type Fixture<T> = () => Promise<T>;
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

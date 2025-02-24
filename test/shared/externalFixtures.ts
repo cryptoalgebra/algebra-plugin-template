@@ -1,5 +1,5 @@
 import {ethers} from 'hardhat';
-import {IAlgebraCustomPoolEntryPoint, IAlgebraFactory, IAlgebraPoolDeployer, TestERC20} from '../../typechain-types';
+import {IAlgebraCustomPoolEntryPoint, IAlgebraFactory, TestERC20} from '../../typechain-types';
 import AlgebraFactoryJson
   from "@cryptoalgebra/integral-core/artifacts/contracts/AlgebraFactory.sol/AlgebraFactory.json";
 import AlgebraCustomPoolEntryPointJson
@@ -31,7 +31,6 @@ export async function tokensFixture(): Promise<TokensFixture> {
 interface EntrypointFixture extends TokensFixture{
     factory: IAlgebraFactory;
     customEntrypoint: IAlgebraCustomPoolEntryPoint;
-    poolDeployer: IAlgebraPoolDeployer;
 }
 
 export const entrypointFixture: Fixture<EntrypointFixture> = async function (): Promise<EntrypointFixture> {
@@ -48,7 +47,7 @@ export const entrypointFixture: Fixture<EntrypointFixture> = async function (): 
     const _factory = (await v3FactoryFactory.deploy(poolDeployerAddress)) as any as IAlgebraFactory;
 
     const poolDeployerFactory = await ethers.getContractFactory(AlgebraPoolDeployer.abi, AlgebraPoolDeployer.bytecode);
-    const _poolDeployer = (await poolDeployerFactory.deploy(_factory)) as any as IAlgebraPoolDeployer;
+    await poolDeployerFactory.deploy(_factory);
 
     const customEntrypointFactory = await ethers.getContractFactory(AlgebraCustomPoolEntryPointJson.abi, AlgebraCustomPoolEntryPointJson.bytecode);
     const _customEntrypoint = (await customEntrypointFactory.deploy(_factory)) as any as IAlgebraCustomPoolEntryPoint;
@@ -59,7 +58,6 @@ export const entrypointFixture: Fixture<EntrypointFixture> = async function (): 
     return {
         factory: _factory,
         customEntrypoint: _customEntrypoint,
-        poolDeployer: _poolDeployer,
         token0,
         token1
     };
