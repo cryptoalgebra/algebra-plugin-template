@@ -3,38 +3,14 @@ pragma solidity ^0.8.0;
 
 import './DynamicFeePlugin.sol';
 
-import '@cryptoalgebra/integral-periphery/contracts/interfaces/IAlgebraCustomPoolEntryPoint.sol';
+import '@cryptoalgebra/integral-base-plugin/contracts/base/BasePluginFactory.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract DynamicFeePluginFactory is Ownable {
-    address public immutable entryPoint;
-
+contract DynamicFeePluginFactory is BasePluginFactory, Ownable {
     uint24 public defaultOverrideFee = 10000;
     uint24 public defaultPluginFee = 10000;
 
-    mapping(address poolAddress => address pluginAddress) public pluginByPool;
-
-    constructor(address _entryPoint) {
-        entryPoint = _entryPoint;
-    }
-
-    function createCustomPool(
-        address creator,
-        address tokenA,
-        address tokenB,
-        bytes calldata data
-    ) external returns (address customPool) {
-        return IAlgebraCustomPoolEntryPoint(entryPoint).createCustomPool(address(this), creator, tokenA, tokenB, data);
-    }
-
-    function beforeCreatePoolHook(address pool, address, address, address, address, bytes calldata) external returns (address) {
-        require(msg.sender == entryPoint);
-        return _createPlugin(pool);
-    }
-
-    function afterCreatePoolHook(address, address, address) external view {
-        require(msg.sender == entryPoint);
-    }
+    constructor(address _entryPoint) BasePluginFactory(_entryPoint) {}
 
     function setDefaultParams(uint24 _defaultOverrideFee, uint24 _defaultPluginFee) onlyOwner external {
         defaultOverrideFee = _defaultOverrideFee;
@@ -57,15 +33,13 @@ contract DynamicFeePluginFactory is Ownable {
         IAlgebraCustomPoolEntryPoint(entryPoint).setFee(pool, newFee);
     }
 
-    function _createPlugin(address pool) internal returns (address) {
-        require(pluginByPool[pool] == address(0), 'Already created');
+    function _createPlugin(address pool) internal override returns (address) {
         DynamicFeePlugin plugin = new DynamicFeePlugin(
             pool,
             address(this),
             defaultOverrideFee,
             defaultPluginFee
         );
-        pluginByPool[pool] = address(plugin);
         return address(plugin);
     }
 }
