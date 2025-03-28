@@ -10,11 +10,11 @@
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.18",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "hardhat": "^2.22.18"
   },
   "dependencies": {
-    "@cryptoalgebra/integral-base-plugin": "^1.2.0-test3",
+    "@cryptoalgebra/integral-base-plugin": "^1.2.1",
     "bignumber.js": "^9.1.2",
     "decimal.js": "^10.5.0"
   }
