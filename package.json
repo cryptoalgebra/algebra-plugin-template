@@ -14,7 +14,7 @@
     "hardhat": "^2.22.18"
   },
   "dependencies": {
-    "@cryptoalgebra/integral-base-plugin": "^1.2.1",
+    "@cryptoalgebra/abstract-plugin": "^1.0.1",
     "bignumber.js": "^9.1.2",
     "decimal.js": "^10.5.0"
   }

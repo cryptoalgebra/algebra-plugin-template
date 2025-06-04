@@ -3,14 +3,14 @@ pragma solidity ^0.8.0;
 
 import './DynamicFeePlugin.sol';
 
-import '@cryptoalgebra/integral-base-plugin/contracts/base/BasePluginFactory.sol';
+import '@cryptoalgebra/abstract-plugin/contracts/AbstractCustomPluginFactory.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract DynamicFeePluginFactory is BasePluginFactory, Ownable {
+contract DynamicFeePluginFactory is AbstractCustomPluginFactory, Ownable {
     uint24 public defaultOverrideFee = 10000;
     uint24 public defaultPluginFee = 10000;
 
-    constructor(address _entryPoint) BasePluginFactory(_entryPoint) {}
+    constructor(address _entryPoint) AbstractCustomPluginFactory(_entryPoint) {}
 
     function setDefaultParams(uint24 _defaultOverrideFee, uint24 _defaultPluginFee) onlyOwner external {
         defaultOverrideFee = _defaultOverrideFee;
