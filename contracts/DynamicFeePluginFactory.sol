@@ -33,6 +33,10 @@ contract DynamicFeePluginFactory is AbstractCustomPluginFactory, Ownable {
         IAlgebraCustomPoolEntryPoint(entryPoint).setFee(pool, newFee);
     }
 
+    function collectPluginFeeFromPlugin(address plugin, address token, uint256 amount, address recipient) onlyOwner external{
+        IAbstractPlugin(plugin).collectPluginFee(token, amount, recipient);
+    }
+
     function _createPlugin(address pool) internal override returns (address) {
         DynamicFeePlugin plugin = new DynamicFeePlugin(
             pool,
@@ -42,4 +46,5 @@ contract DynamicFeePluginFactory is AbstractCustomPluginFactory, Ownable {
         );
         return address(plugin);
     }
+    
 }
