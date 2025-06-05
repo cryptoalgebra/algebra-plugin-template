@@ -2,9 +2,9 @@
 pragma solidity ^0.8.0;
 
 import '@cryptoalgebra/integral-core/contracts/libraries/Plugins.sol';
-import "@cryptoalgebra/integral-base-plugin/contracts/base/BasePlugin.sol";
+import '@cryptoalgebra/abstract-plugin/contracts/AbstractPlugin.sol';
 
-contract DynamicFeePlugin is BasePlugin {
+contract DynamicFeePlugin is AbstractPlugin {
     /// Algebra specific stuff
     using Plugins for uint8;
 
@@ -20,7 +20,7 @@ contract DynamicFeePlugin is BasePlugin {
         address _pluginFactory,
         uint24 _overrideFee,
         uint24 _pluginFee
-    ) BasePlugin(_pool, _pluginFactory) {
+    ) AbstractPlugin(_pool, _pluginFactory) {
         overrideFee = _overrideFee;
         pluginFee = _pluginFee;
     }
@@ -39,7 +39,7 @@ contract DynamicFeePlugin is BasePlugin {
     }
 
     /// @dev Considering defaultPluginConfig, is unused
-    function afterInitialize(address, uint160, int24 tick) external override onlyPool returns (bytes4) {
+    function afterInitialize(address, uint160, int24) external override onlyPool returns (bytes4) {
         // Add this line to reset config since the hook is unused
         _updatePluginConfigInPool(defaultPluginConfig);
         return IAlgebraPlugin.afterInitialize.selector;
@@ -74,7 +74,7 @@ contract DynamicFeePlugin is BasePlugin {
     }
 
     /// @dev Considering defaultPluginConfig, is unused
-    function afterSwap(address, address, bool zeroToOne, int256, uint160, int256, int256, bytes calldata) external override onlyPool returns (bytes4) {
+    function afterSwap(address, address, bool, int256, uint160, int256, int256, bytes calldata) external override onlyPool returns (bytes4) {
         // Add this line to reset config since the hook is unused
         _updatePluginConfigInPool(defaultPluginConfig);
         return IAlgebraPlugin.afterSwap.selector;

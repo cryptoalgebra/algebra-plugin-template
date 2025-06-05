@@ -3,14 +3,14 @@ pragma solidity ^0.8.0;
 
 import './DynamicFeePlugin.sol';
 
-import '@cryptoalgebra/integral-base-plugin/contracts/base/BasePluginFactory.sol';
+import '@cryptoalgebra/abstract-plugin/contracts/AbstractCustomPluginFactory.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-contract DynamicFeePluginFactory is BasePluginFactory, Ownable {
+contract DynamicFeePluginFactory is AbstractCustomPluginFactory, Ownable {
     uint24 public defaultOverrideFee = 10000;
     uint24 public defaultPluginFee = 10000;
 
-    constructor(address _entryPoint) BasePluginFactory(_entryPoint) {}
+    constructor(address _entryPoint) AbstractCustomPluginFactory(_entryPoint) {}
 
     function setDefaultParams(uint24 _defaultOverrideFee, uint24 _defaultPluginFee) onlyOwner external {
         defaultOverrideFee = _defaultOverrideFee;
@@ -33,6 +33,10 @@ contract DynamicFeePluginFactory is BasePluginFactory, Ownable {
         IAlgebraCustomPoolEntryPoint(entryPoint).setFee(pool, newFee);
     }
 
+    function collectPluginFeeFromPlugin(address plugin, address token, uint256 amount, address recipient) onlyOwner external{
+        IAbstractPlugin(plugin).collectPluginFee(token, amount, recipient);
+    }
+
     function _createPlugin(address pool) internal override returns (address) {
         DynamicFeePlugin plugin = new DynamicFeePlugin(
             pool,
@@ -42,4 +46,5 @@ contract DynamicFeePluginFactory is BasePluginFactory, Ownable {
         );
         return address(plugin);
     }
+    
 }
